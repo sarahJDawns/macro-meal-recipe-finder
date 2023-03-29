@@ -1,6 +1,6 @@
-document.querySelector("#search").addEventListener("click", getRecipe);
+document.querySelector("#search").addEventListener("click", getMacros);
 
-function getRecipe() {
+function getMacros() {
   const maxCalories = document.querySelector("#calories").value;
   const maxCarbs = document.querySelector("#carbs").value;
   const maxFat = document.querySelector("#fat").value;
@@ -34,29 +34,37 @@ function getRecipe() {
         recipeDiv.appendChild(titleElem);
         recipeDiv.appendChild(infoElem);
         displayDiv.appendChild(recipeDiv);
-
-        fetch(
-          `https://api.spoonacular.com/recipes/${id}/summary?apiKey=${apiKey}`
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            const recipeSummary = data.summary;
-
-            // Create a new HTML element to display the recipe summary
-            const recipeSummaryElem = document.createElement("p");
-            recipeSummaryElem.innerText = recipeSummary;
-
-            // Add the recipe summary element to the display div
-            const displayDiv = document.querySelector("#display");
-
-            displayDiv.appendChild(recipeSummaryElem);
-          })
-          .catch((err) => {
-            console.log("Error fetching recipe summary:", err);
-          });
       });
+      getRecipe(recipeId);
     })
     .catch((err) => {
       console.log("error on fetch");
+    });
+}
+
+function getRecipeById() {
+  const recipeId = document.querySelector("#recipeId").value;
+  getRecipe(recipeId);
+}
+
+function getRecipe(recipeId) {
+  const url2 = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
+  fetch(url2)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      const recipeSummary = data.summary;
+
+      // Create a new HTML element to display the recipe summary
+      const recipeSummaryElem = document.createElement("p");
+      recipeSummaryElem.innerHTML = recipeSummary;
+
+      // Add the recipe summary element to the display div
+      const displayDiv = document.querySelector("#recipe");
+
+      displayDiv.appendChild(recipeSummaryElem);
+    })
+    .catch((err) => {
+      console.log("Error fetching recipe summary");
     });
 }

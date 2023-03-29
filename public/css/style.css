@@ -2,7 +2,25 @@
   box-sizing: border-box;
 }
 
-img {
-  display: block;
+#recipe p {
+  width: 75%;
   margin: 0 auto;
+}
+
+#recipe p a {
+  color: rgb(67, 67, 151);
+}
+
+#recipe p a:hover {
+  color: rgb(73, 73, 168);
+}
+
+.btn-dark {
+  background-color: rgb(67, 67, 151);
+  border-color: rgb(67, 67, 151);
+}
+
+.btn-dark:hover {
+  background-color: rgb(73, 73, 168);
+  border-color: rgb(73, 73, 168);
 }

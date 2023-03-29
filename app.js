@@ -42,21 +42,21 @@ app.get("/api/search", async (req, res) => {
     // console.log("Data:", data);
     res.send(data);
   } catch (err) {
-    console.error(err);
+    console.error("error");
     res.status(500).send("Error fetching data from API");
   }
 });
 
-app.get("/api/recipe/:id", async (req, res) => {
+app.get("/api/recipes/:id/summary", async (req, res) => {
   const { id } = req.params;
-  const url = `https://api.spoonacular.com/recipes/${id}/summary?apiKey=${apiKey}`;
+  const url2 = `https://api.spoonacular.com/recipes/${id}/summary?apiKey=${apiKey}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url2);
     const data = await response.json();
     res.send(data);
   } catch (err) {
-    console.error(err);
+    console.error("error");
     res.status(500).send("Error fetching data from API");
   }
 });
