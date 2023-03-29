@@ -42,7 +42,7 @@ app.get("/api/search", async (req, res) => {
     // console.log("Data:", data);
     res.send(data);
   } catch (err) {
-    console.error("error");
+    // console.error("error");
     res.status(500).send("Error fetching data from API");
   }
 });
@@ -56,7 +56,7 @@ app.get("/api/recipes/:id/summary", async (req, res) => {
     const data = await response.json();
     res.send(data);
   } catch (err) {
-    console.error("error");
+    // console.error("error");
     res.status(500).send("Error fetching data from API");
   }
 });
