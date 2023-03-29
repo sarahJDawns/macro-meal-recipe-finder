@@ -20,7 +20,7 @@ findButton.addEventListener("click", function () {
 });
 
 function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
-  const url = `/api/search?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=1&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
+  const url = `/api/search?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=5&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
 
   fetch(url)
     .then((res) => {
@@ -30,55 +30,39 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
     .then((data) => {
       console.log(data);
 
-      const recipeId = data[0].id;
+      const macroResults = data;
 
       const displayDiv = document.querySelector("#display");
       displayDiv.innerHTML = "";
 
-      data.forEach((recipe) => {
+      macroResults.forEach((macro) => {
+        const recipeId = macro.id;
+
         const recipeDiv = document.createElement("div");
         const imgElem = document.createElement("img");
-        imgElem.src = recipe.image;
+        imgElem.src = macro.image;
         const titleElem = document.createElement("p");
-        titleElem.innerText = recipe.title;
+        titleElem.innerText = macro.title;
         const infoElem = document.createElement("p");
-        infoElem.innerText = `Calories: ${recipe.calories}, Carbs: ${recipe.carbs}, Fat: ${recipe.fat}, Protein: ${recipe.protein}`;
+        infoElem.innerText = `Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
 
         recipeDiv.appendChild(imgElem);
         recipeDiv.appendChild(titleElem);
         recipeDiv.appendChild(infoElem);
         displayDiv.appendChild(recipeDiv);
+        const url2 = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
+        fetch(url2)
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            const recipeSummary = data.summary;
+            const recipeSummaryElem = document.createElement("p");
+            recipeSummaryElem.innerHTML = recipeSummary;
+            displayDiv.appendChild(recipeSummaryElem);
+          })
+          .catch((err) => {
+            console.log("Error fetching recipe summary");
+          });
       });
-      getRecipe(recipeId);
-    })
-    .catch((err) => {
-      console.log("error on fetch");
-    });
-}
-
-function getRecipeById() {
-  const recipeId = document.querySelector("#recipeId").value;
-  getRecipe(recipeId);
-}
-
-function getRecipe(recipeId) {
-  const url2 = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
-  fetch(url2)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      const recipeSummary = data.summary;
-
-      // Create a new HTML element to display the recipe summary
-      const recipeSummaryElem = document.createElement("p");
-      recipeSummaryElem.innerHTML = recipeSummary;
-
-      // Add the recipe summary element to the display div
-      const displayDiv = document.querySelector("#recipe");
-
-      displayDiv.appendChild(recipeSummaryElem);
-    })
-    .catch((err) => {
-      console.log("Error fetching recipe summary");
     });
 }
