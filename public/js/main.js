@@ -12,8 +12,9 @@ findButton.addEventListener("click", function () {
     maxFat === "" &&
     minProtein === ""
   ) {
-    errorMessage.textContent = "Please enter search criteria.";
+    errorMessage.textContent = "Please enter search criteria";
   } else {
+    errorMessage.textContent = "";
     getMacros(maxCalories, maxCarbs, maxFat, minProtein);
   }
 });
