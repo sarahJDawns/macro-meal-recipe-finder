@@ -2,6 +2,9 @@ findButton = document.querySelector("#search");
 const clearButton = document.querySelector("#clear");
 const errorMessage = document.querySelector("#errorMessage");
 
+const displayInput = document.querySelector("#display");
+const displayDiv = displayInput;
+
 const caloriesInput = document.querySelector("#calories");
 const carbsInput = document.querySelector("#carbs");
 const fatInput = document.querySelector("#fat");
@@ -14,9 +17,9 @@ findButton.addEventListener("click", function () {
   const minProtein = proteinInput.value;
 
   if (
-    maxCalories === "" &&
-    maxCarbs === "" &&
-    maxFat === "" &&
+    maxCalories === "" ||
+    maxCarbs === "" ||
+    maxFat === "" ||
     minProtein === ""
   ) {
     errorMessage.textContent = "Please enter search criteria";
@@ -32,6 +35,7 @@ clearButton.addEventListener("click", function () {
   carbsInput.value = "";
   fatInput.value = "";
   proteinInput.value = "";
+
   displayDiv.innerHTML = "";
 });
 
@@ -45,7 +49,6 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
     .then((data) => {
       console.log(data);
 
-      const displayDiv = document.querySelector("#display");
       displayDiv.innerHTML = "";
 
       data.forEach((macro) => {
