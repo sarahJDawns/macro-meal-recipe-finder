@@ -23,8 +23,6 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.set("view engine", "ejs");
-
 app.get("/", (req, res) => res.render("index", { apiKey }));
 
 app.get("/api/search", async (req, res) => {
@@ -73,14 +71,14 @@ app.get("/public/css/style.css", (req, res) => {
   res.sendFile(__dirname + "/public/css/style.css");
 });
 
+app.get("/public/images/star.png", (req, res) => {
+  console.log("Image requested");
+  res.sendFile(__dirname, "/public/images/star.png");
+});
+
 app.get("/public/js/main.js", (req, res) => {
   console.log("Main script requested");
   res.sendFile(__dirname + "/public/js/main.js");
-});
-
-app.get("/public/images/star.png", (req, res) => {
-  console.log("Image requested");
-  res.sendFile(__dirname + "/public/images/star.png ");
 });
 
 app.listen(process.env.PORT || PORT, () => {
