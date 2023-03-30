@@ -24,7 +24,6 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
 
   fetch(url)
     .then((res) => {
-      // console.log(res);
       return res.json();
     })
     .then((data) => {
@@ -35,16 +34,15 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
 
       data.forEach((macro) => {
         const macroDiv = document.createElement("div");
+        const macroImageElem = document.createElement("img");
         const macroTitleElem = document.createElement("h2");
+
+        macroImageElem.setAttribute("src", macro.image);
         macroTitleElem.innerText = `Macros - Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
 
+        macroDiv.appendChild(macroImageElem);
         macroDiv.appendChild(macroTitleElem);
         displayDiv.appendChild(macroDiv);
-
-        // Create a new HTML element for the macro image
-        const macroImageElem = document.createElement("img");
-        macroImageElem.src = macro.image;
-        macroDiv.appendChild(macroImageElem);
 
         const recipeId = macro.id;
         getRecipe(recipeId, macroDiv);
@@ -65,7 +63,12 @@ function getRecipe(recipeId, macroDiv) {
 
       // Create a new HTML element to display the recipe summary
       const recipeSummaryElem = document.createElement("p");
-      recipeSummaryElem.innerHTML = recipeSummary;
+
+      // Replace anchor tags with text content
+      recipeSummaryElem.innerHTML = recipeSummary.replace(
+        /<a\b[^>]*>(.*?)<\/a>/gi,
+        "$1"
+      );
 
       // Add the recipe summary element to the macro div
       macroDiv.appendChild(recipeSummaryElem);
