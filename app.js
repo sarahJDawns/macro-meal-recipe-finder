@@ -5,6 +5,7 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 
 const app = express();
+
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2121;
 
@@ -71,9 +72,9 @@ app.get("/public/css/style.css", (req, res) => {
   res.sendFile(__dirname + "/public/css/style.css");
 });
 
-app.get("/public/images/star.png", (req, res) => {
+app.get("/images/favicon-32x32.png", (req, res) => {
   console.log("Image requested");
-  res.sendFile(__dirname, "/public/images/star.png");
+  res.sendFile("/images/favicon-32x32.png");
 });
 
 app.get("/public/js/main.js", (req, res) => {
