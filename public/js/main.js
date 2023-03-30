@@ -30,39 +30,47 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
     .then((data) => {
       console.log(data);
 
-      const macroResults = data;
-
       const displayDiv = document.querySelector("#display");
       displayDiv.innerHTML = "";
 
-      macroResults.forEach((macro) => {
+      data.forEach((macro) => {
+        const macroDiv = document.createElement("div");
+        const macroTitleElem = document.createElement("h2");
+        macroTitleElem.innerText = `Macros - Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
+
+        macroDiv.appendChild(macroTitleElem);
+        displayDiv.appendChild(macroDiv);
+
+        // Create a new HTML element for the macro image
+        const macroImageElem = document.createElement("img");
+        macroImageElem.src = macro.image;
+        macroDiv.appendChild(macroImageElem);
+
         const recipeId = macro.id;
-
-        const recipeDiv = document.createElement("div");
-        const imgElem = document.createElement("img");
-        imgElem.src = macro.image;
-        const titleElem = document.createElement("p");
-        titleElem.innerText = macro.title;
-        const infoElem = document.createElement("p");
-        infoElem.innerText = `Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
-
-        recipeDiv.appendChild(imgElem);
-        recipeDiv.appendChild(titleElem);
-        recipeDiv.appendChild(infoElem);
-        displayDiv.appendChild(recipeDiv);
-        const url2 = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
-        fetch(url2)
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            const recipeSummary = data.summary;
-            const recipeSummaryElem = document.createElement("p");
-            recipeSummaryElem.innerHTML = recipeSummary;
-            displayDiv.appendChild(recipeSummaryElem);
-          })
-          .catch((err) => {
-            console.log("Error fetching recipe summary");
-          });
+        getRecipe(recipeId, macroDiv);
       });
+    })
+    .catch((err) => {
+      console.log("error on fetch");
+    });
+}
+
+function getRecipe(recipeId, macroDiv) {
+  const url2 = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
+  fetch(url2)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      const recipeSummary = data.summary;
+
+      // Create a new HTML element to display the recipe summary
+      const recipeSummaryElem = document.createElement("p");
+      recipeSummaryElem.innerHTML = recipeSummary;
+
+      // Add the recipe summary element to the macro div
+      macroDiv.appendChild(recipeSummaryElem);
+    })
+    .catch((err) => {
+      console.log("Error fetching recipe summary");
     });
 }
