@@ -1,4 +1,5 @@
-const findButton = document.querySelector("#search");
+findButton = document.querySelector("#search");
+const clearButton = document.querySelector("#clear");
 const errorMessage = document.querySelector("#errorMessage");
 
 findButton.addEventListener("click", function () {
@@ -6,6 +7,7 @@ findButton.addEventListener("click", function () {
   const maxCarbs = document.querySelector("#carbs").value;
   const maxFat = document.querySelector("#fat").value;
   const minProtein = document.querySelector("#protein").value;
+
   if (
     maxCalories === "" &&
     maxCarbs === "" &&
@@ -17,6 +19,16 @@ findButton.addEventListener("click", function () {
     errorMessage.textContent = "";
     getMacros(maxCalories, maxCarbs, maxFat, minProtein);
   }
+});
+
+clearButton.addEventListener("click", function () {
+  errorMessage.textContent = "";
+  document.querySelector("#calories").value = "";
+  document.querySelector("#carbs").value = "";
+  document.querySelector("#fat").value = "";
+  document.querySelector("#protein").value = "";
+  const displayDiv = document.querySelector("#display");
+  displayDiv.innerHTML = "";
 });
 
 function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
@@ -33,26 +45,25 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
       displayDiv.innerHTML = "";
 
       data.forEach((macro) => {
-        const macroDiv = document.createElement("div");
-        macroDiv.classList.add("macro-container");
+        const macroContainer = document.createElement("div");
+        macroContainer.classList.add("macro-container");
+
         const macroImageElem = document.createElement("img");
         macroImageElem.classList.add("macro-image");
+        macroImageElem.setAttribute("src", macro.image);
+
         const macroTitleElem = document.createElement("h2");
         macroTitleElem.classList.add("macro-title");
-
-        macroImageElem.setAttribute("src", macro.image);
         macroTitleElem.innerText = `Macros - Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
 
-        macroDiv.appendChild(macroImageElem);
-        macroDiv.appendChild(macroTitleElem);
-        displayDiv.appendChild(macroDiv);
+        macroContainer.appendChild(macroImageElem);
+        macroContainer.appendChild(macroTitleElem);
+
+        displayDiv.appendChild(macroContainer);
 
         const recipeId = macro.id;
-        getRecipe(recipeId, macroDiv);
+        getRecipe(recipeId, macroContainer);
       });
-    })
-    .catch((err) => {
-      console.log("error on fetch");
     });
 }
 
