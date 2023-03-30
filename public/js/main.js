@@ -2,11 +2,16 @@ findButton = document.querySelector("#search");
 const clearButton = document.querySelector("#clear");
 const errorMessage = document.querySelector("#errorMessage");
 
+const caloriesInput = document.querySelector("#calories");
+const carbsInput = document.querySelector("#carbs");
+const fatInput = document.querySelector("#fat");
+const proteinInput = document.querySelector("#protein");
+
 findButton.addEventListener("click", function () {
-  const maxCalories = document.querySelector("#calories").value;
-  const maxCarbs = document.querySelector("#carbs").value;
-  const maxFat = document.querySelector("#fat").value;
-  const minProtein = document.querySelector("#protein").value;
+  const maxCalories = caloriesInput.value;
+  const maxCarbs = carbsInput.value;
+  const maxFat = fatInput.value;
+  const minProtein = proteinInput.value;
 
   if (
     maxCalories === "" &&
@@ -23,11 +28,10 @@ findButton.addEventListener("click", function () {
 
 clearButton.addEventListener("click", function () {
   errorMessage.textContent = "";
-  document.querySelector("#calories").value = "";
-  document.querySelector("#carbs").value = "";
-  document.querySelector("#fat").value = "";
-  document.querySelector("#protein").value = "";
-  const displayDiv = document.querySelector("#display");
+  caloriesInput.value = "";
+  carbsInput.value = "";
+  fatInput.value = "";
+  proteinInput.value = "";
   displayDiv.innerHTML = "";
 });
 
