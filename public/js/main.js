@@ -20,7 +20,7 @@ findButton.addEventListener("click", function () {
 });
 
 function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
-  const url = `/api/search?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=5&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
+  const url = `/api/search?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=6&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
 
   fetch(url)
     .then((res) => {
@@ -34,8 +34,11 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
 
       data.forEach((macro) => {
         const macroDiv = document.createElement("div");
+        macroDiv.classList.add("macro-container");
         const macroImageElem = document.createElement("img");
+        macroImageElem.classList.add("macro-image");
         const macroTitleElem = document.createElement("h2");
+        macroTitleElem.classList.add("macro-title");
 
         macroImageElem.setAttribute("src", macro.image);
         macroTitleElem.innerText = `Macros - Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
@@ -61,16 +64,14 @@ function getRecipe(recipeId, macroDiv) {
       console.log(data);
       const recipeSummary = data.summary;
 
-      // Create a new HTML element to display the recipe summary
       const recipeSummaryElem = document.createElement("p");
+      recipeSummaryElem.classList.add("recipe-container");
 
-      // Replace anchor tags with text content
       recipeSummaryElem.innerHTML = recipeSummary.replace(
         /<a\b[^>]*>(.*?)<\/a>/gi,
         "$1"
       );
 
-      // Add the recipe summary element to the macro div
       macroDiv.appendChild(recipeSummaryElem);
     })
     .catch((err) => {

@@ -30,7 +30,7 @@ app.get("/", (req, res) => res.render("index", { apiKey }));
 app.get("/api/search", async (req, res) => {
   const { maxCalories, maxCarbs, maxFat, minProtein } = req.query;
 
-  const url = `https://api.spoonacular.com/recipes/findByNutrients?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=5&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
+  const url = `https://api.spoonacular.com/recipes/findByNutrients?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=6&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
 
   // console.log("Request URL:", url);
   // console.log("Request Query Parameters:", req.query);
