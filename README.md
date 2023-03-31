@@ -1,6 +1,12 @@
 ## Macro Meal Recipe Finder
 
-Allows users to filter recipes by macro nutrient needs. Using Spoonacular API.
+Users filter recipes by macro nutrient needs. Using Spoonacular API.
+
+---
+
+![img](public/images/macroMealSet.png)
+
+---
 
 ### Built With
 
