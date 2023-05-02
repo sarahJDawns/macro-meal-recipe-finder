@@ -4,7 +4,7 @@ Users filter recipes by macro nutrient needs. Using Spoonacular API.
 
 ---
 
-![img](public/images/macroMealSet.png)
+![img](public/images/macroMealSetA.png)
 
 ---
 
