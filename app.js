@@ -31,17 +31,11 @@ app.get("/api/search", async (req, res) => {
 
   const url = `https://api.spoonacular.com/recipes/findByNutrients?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=6&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
 
-  // console.log("Request URL:", url);
-  // console.log("Request Query Parameters:", req.query);
-
   try {
     const response = await fetch(url);
-    // console.log("Response:", response);
     const data = await response.json();
-    // console.log("Data:", data);
     res.send(data);
   } catch (err) {
-    // console.error("error");
     res.status(500).send("Error fetching data from API");
   }
 });
@@ -55,12 +49,9 @@ app.get("/api/recipes/:id/summary", async (req, res) => {
     const data = await response.json();
     res.send(data);
   } catch (err) {
-    // console.error("error");
     res.status(500).send("Error fetching data from API");
   }
 });
-
-// app.get("/", (req, res) => res.send("Hello World!"));
 
 app.get("/views/index.ejs", (req, res) => {
   console.log("Index page requested");

@@ -43,12 +43,8 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
   const url = `/api/search?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=6&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
 
   fetch(url)
-    .then((res) => {
-      return res.json();
-    })
+    .then((res) => res.json())
     .then((data) => {
-      console.log(data);
-
       displayDiv.innerHTML = "";
 
       data.forEach((macro) => {
@@ -57,7 +53,7 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
 
         const macroImageElem = document.createElement("img");
         macroImageElem.classList.add("macro-image");
-        macroImageElem.setAttribute("src", macro.image);
+        macroImageElem.src = macro.image;
 
         const macroTitleElem = document.createElement("h2");
         macroTitleElem.classList.add("macro-title");
@@ -74,23 +70,18 @@ function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
     });
 }
 
-function getRecipe(recipeId, macroDiv) {
-  const url2 = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
-  fetch(url2)
+function getRecipe(recipeId, recipeContainer) {
+  const url = `/api/recipes/${recipeId}/summary?apiKey=${apiKey}`;
+  return fetch(url)
     .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      const recipeSummary = data.summary;
-
+    .then(({ summary }) => {
       const recipeSummaryElem = document.createElement("p");
       recipeSummaryElem.classList.add("recipe-container");
-
-      recipeSummaryElem.innerHTML = recipeSummary.replace(
+      recipeSummaryElem.textContent = summary.replace(
         /<a\b[^>]*>(.*?)<\/a>/gi,
         "$1"
       );
-
-      macroDiv.appendChild(recipeSummaryElem);
+      recipeContainer.appendChild(recipeSummaryElem);
     })
     .catch((err) => {
       console.log("Error fetching recipe summary");
