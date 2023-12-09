@@ -84,7 +84,6 @@ import Layout from "../layouts/Layout.astro";
   const displayDiv = document.querySelector(".display");
 
   const apiKey = import.meta.env.API_KEY;
-  // const apiKey = import.meta.env.VITE_API_KEY;
 
   searchButton.addEventListener("click", function () {
     const isEmpty = Array.from(inputs).some((input) => input.value === "");
