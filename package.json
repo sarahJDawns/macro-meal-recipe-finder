@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
+    "start": "npm run dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -17,6 +17,7 @@
     "tailwindcss": "^3.3.5"
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "prettier-plugin-astro": "^0.12.2"
   }
 }

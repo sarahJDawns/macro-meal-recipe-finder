@@ -2,6 +2,7 @@
 import Button from "../components/Button.astro";
 import Input from "../components/Input.astro";
 import Layout from "../layouts/Layout.astro";
+import "dotenv/config";
 ---
 
 <Layout>
@@ -138,8 +139,8 @@ import Layout from "../layouts/Layout.astro";
             <p class="font-body text-sm text-text2 flex-grow"><strong>Protein:</strong> ${protein} g</p>
           </div>
           <p class="font-body text-text2 mt-4 mb-2">${analyzedInstructions[0].steps
-          .map((step) => step.step)
-          .join(" ")}</p>
+            .map((step) => step.step)
+            .join(" ")}</p>
           </div>
         </div>
       `;
