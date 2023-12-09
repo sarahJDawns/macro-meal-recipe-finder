@@ -5,9 +5,9 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <main class="container flex w-full flex-col h-screen">
+  <main class="container flex w-full flex-col">
     <section>
-      <div class="flex flex-row items-center justify-around">
+      <div class="flex flex-col md:flex-row items-center justify-around">
         <Input
           id="calories"
           type="number"
@@ -41,7 +41,7 @@ import Layout from "../layouts/Layout.astro";
           required="true"
         />
       </div>
-      <div class="flex flex-row justify-center gap-4">
+      <div class="flex flex-row justify-center gap-4 mt-10 md:mt-0">
         <Button
           style={"primary"}
           size={"sm"}
@@ -67,14 +67,16 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </section>
     <section>
-      <div class="display" id="display"></div>
+      <div
+        class="display md:flex-row flex flex-col flex-wrap items-center w-full mb-10 min-h-[400px]"
+        id="display"
+      >
+      </div>
     </section>
   </main>
 </Layout>
 
-
 <script type="module">
-
   const inputs = document.querySelectorAll("input");
   const searchButton = document.querySelector("button.searchButton");
   const clearButton = document.querySelector("button.clearButton");
@@ -94,7 +96,7 @@ import Layout from "../layouts/Layout.astro";
       const [maxCalories, maxCarbs, maxFat, minProtein] = Array.from(
         inputs
       ).map((input) => input.value);
-       getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein);
+      getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein);
     }
   });
 
@@ -102,40 +104,50 @@ import Layout from "../layouts/Layout.astro";
     inputs.forEach((input) => (input.value = ""));
   });
 
-async function getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein) {
-  try {
-    const url = `https://api.spoonacular.com/recipes/complexSearch?number=1&addRecipeInformation=true&instructionsRequired=true&includeIngredients=true&apiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
-    const response = await fetch(url);
-    const data = await response.json();
+  async function getRecipesWithMacros(
+    maxCalories,
+    maxCarbs,
+    maxFat,
+    minProtein
+  ) {
+    try {
+      const url = `https://api.spoonacular.com/recipes/complexSearch?number=2&addRecipeInformation=true&instructionsRequired=true&apiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
+      const response = await fetch(url);
+      const data = await response.json();
 
-    const { results } = data;
+      const { results } = data;
 
-    displayDiv.innerHTML = "";
+      displayDiv.innerHTML = "";
 
-    for (const recipe of results) {
-      const { image, sourceUrl, nutrition, title, analyzedInstructions } = recipe;
+      for (const recipe of results) {
+        const { image, nutrition, title, analyzedInstructions } = recipe;
 
-      const calories = nutrition.nutrients[0].amount;
-      const protein = nutrition.nutrients[1].amount;
-      const fat = nutrition.nutrients[2].amount;
-      const carbs = nutrition.nutrients[3].amount;
+        const calories = nutrition.nutrients[0].amount;
+        const protein = nutrition.nutrients[1].amount;
+        const fat = nutrition.nutrients[2].amount;
+        const carbs = nutrition.nutrients[3].amount;
 
-      const html = `
-        <h2>${title}</h2>
-        <img src="${image}" alt="${title}">
-        <p><a href="${sourceUrl}">${sourceUrl}</a></p>
-        <p><strong>Calories:</strong> ${calories} kcal</p>
-        <p><strong>Protein:</strong> ${protein} g</p>
-        <p><strong>Fat:</strong> ${fat} g</p>
-        <p><strong>Carbs:</strong> ${carbs} g</p>
-        <p>${analyzedInstructions[0].steps.map((step) => step.step).join(" ")}</p>
+        const html = `
+        <div class="md:w-1/2 w-3/4 p-4 items-center w-full">
+          <div class="border border-text2 p-2 ">
+          <h2 class="text-2xl font-bold mt-4 mb-2 font-body text-text ">${title}</h2>
+          <img src="${image}" alt="${title}" >
+          <div class="flex flex-row flex-wrap gap-2 mt-2">
+            <p class="font-body text-sm text-text2 flex-grow"><strong>Calories:</strong> ${calories} kcal</p>
+            <p class="font-body text-sm text-text2 flex-grow"><strong>Carbs:</strong> ${carbs} g</p>
+            <p class="font-body text-sm text-text2 flex-grow"><strong>Fat:</strong> ${fat} g</p>
+            <p class="font-body text-sm text-text2 flex-grow"><strong>Protein:</strong> ${protein} g</p>
+          </div>
+          <p class="font-body text-text2 mt-4 mb-2">${analyzedInstructions[0].steps
+          .map((step) => step.step)
+          .join(" ")}</p>
+          </div>
+        </div>
       `;
-
-      displayDiv.innerHTML += html;
+        displayDiv.innerHTML += html;
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
-}
-
 </script>
