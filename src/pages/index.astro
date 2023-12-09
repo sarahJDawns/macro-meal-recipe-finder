@@ -8,97 +8,73 @@ import Layout from "../layouts/Layout.astro";
   <main class="container flex w-full flex-col h-screen">
     <section>
       <div class="flex flex-row items-center justify-around">
-      <Input
-        id="calories"
-        type="number"
-        name="calories"
-        label="Calories"
-        placeholder="Enter max"
-        required="true"
-      />
-      <Input
-        id="carbs"
-        type="number"
-        name="carbs"
-        label="Carbohydrates"
-        placeholder="Enter max"
-        required="true"
-      />
-      <Input
-        id="fat"
-        type="number"
-        name="fat"
-        label="Fat"
-        placeholder="Enter max"
-        required="true"
-      />
-      <Input
-        id="protein"
-        type="number"
-        name="protein"
-        label="Protein"
-        placeholder="Enter min"
-        required="true"
-      />
-    </div>
-    <div class="flex flex-row justify-center gap-4">
-      <Button
-        style={"primary"}
-        size={"sm"}
-        class={"flex searchButton"}
-        id="search"
-      >
-        Search!
-      </Button>
-      <Button
-        style={"primary"}
-        size={"sm"}
-        class={"flex clearButton"}
-        id="clear"
-      >
-        Clear!
-      </Button>
-    </div>
-    <div class="p-5">
-      <p class="errorMessage text-text2 font-bold text-lg mt-10 flex flex-row text-center justify-center uppercase"></p>
-    </div>
+        <Input
+          id="calories"
+          type="number"
+          name="calories"
+          label="Calories"
+          placeholder="Enter max"
+          required="true"
+        />
+        <Input
+          id="carbs"
+          type="number"
+          name="carbs"
+          label="Carbohydrates"
+          placeholder="Enter max"
+          required="true"
+        />
+        <Input
+          id="fat"
+          type="number"
+          name="fat"
+          label="Fat"
+          placeholder="Enter max"
+          required="true"
+        />
+        <Input
+          id="protein"
+          type="number"
+          name="protein"
+          label="Protein"
+          placeholder="Enter min"
+          required="true"
+        />
+      </div>
+      <div class="flex flex-row justify-center gap-4">
+        <Button
+          style={"primary"}
+          size={"sm"}
+          class={"flex searchButton"}
+          id="search"
+        >
+          Search!
+        </Button>
+        <Button
+          style={"primary"}
+          size={"sm"}
+          class={"flex clearButton"}
+          id="clear"
+        >
+          Clear!
+        </Button>
+      </div>
+      <div class="p-5">
+        <p
+          class="errorMessage text-text2 font-bold text-lg mt-10 flex flex-row text-center justify-center uppercase"
+        >
+        </p>
+      </div>
     </section>
     <section>
-      <div class="display"></div>
+      <div class="display" id="display"></div>
     </section>
   </main>
 </Layout>
 
-<style>
- .macro-container {
-  margin: 20px;
-  flex: 1 0 calc(33.33% - 20px);
-  justify-content: center;
-  align-items: center;
-}
-
-.recipe-container {
-  font-size: 16px;
-  margin-bottom: 20px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.macro-image {
-  padding-bottom: 20px;
-  object-fit: contain;
-  justify-content: center;
-  align-items: center;
-}
-
-.macro-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-</style>
 
 <script type="module">
+
   const inputs = document.querySelectorAll("input");
   const searchButton = document.querySelector("button.searchButton");
   const clearButton = document.querySelector("button.clearButton");
@@ -106,6 +82,7 @@ import Layout from "../layouts/Layout.astro";
   const displayDiv = document.querySelector(".display");
 
   const apiKey = import.meta.env.API_KEY;
+  // const apiKey = import.meta.env.VITE_API_KEY;
 
   searchButton.addEventListener("click", function () {
     const isEmpty = Array.from(inputs).some((input) => input.value === "");
@@ -117,8 +94,7 @@ import Layout from "../layouts/Layout.astro";
       const [maxCalories, maxCarbs, maxFat, minProtein] = Array.from(
         inputs
       ).map((input) => input.value);
-      getMacros(maxCalories, maxCarbs, maxFat, minProtein);
-      // getMacrosWithRecipe(maxCalories, maxCarbs, maxFat, minProtein);
+       getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein);
     }
   });
 
@@ -126,118 +102,40 @@ import Layout from "../layouts/Layout.astro";
     inputs.forEach((input) => (input.value = ""));
   });
 
-// async function getMacrosWithRecipe(maxCalories, maxCarbs, maxFat, minProtein) {
-//   const url = `https://api.spoonacular.com/recipes/complexSearch?number=2&addRecipeInformation=true&instructionsRequired=true&includeIngredients=trueapiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
-
-//   try {
-//     const res = await fetch(url);
-//     const data = await res.json();
-
-//     const recipes = [];
-
-//     for (const macro of data) {
-//       const macroContainer = document.createElement("div");
-//       macroContainer.classList.add("macro-container");
-
-//       const macroImageElem = document.createElement("img");
-//       macroImageElem.classList.add("macro-image");
-//       macroImageElem.src = macro.image;
-
-//       const macroTitleElem = document.createElement("h2");
-//       macroTitleElem.classList.add("macro-title");
-//       macroTitleElem.innerText = `Macros - Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
-
-//       macroContainer.appendChild(macroImageElem);
-//       macroContainer.appendChild(macroTitleElem);
-
-//       displayDiv.appendChild(macroContainer);
-
-//       const recipeId = macro.id;
-//       const recipe = await getRecipe(recipeId);
-//       recipes.push({
-//         image: macro.image,
-//         macroTitle: macroTitleElem.innerText,
-//         title: recipe.title,
-//         information: recipe.information,
-//         instructions: recipe.instructions,
-//         ingredients: recipe.ingredients
-//       });
-//     }
-
-//     return recipes;
-//   } catch (err) {
-//     console.log("Error fetching macro data");
-//   }
-// }
-
-// async function getRecipe(recipeId) {
-//   const url = `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKey}`;
-
-//   try {
-//     const res = await fetch(url);
-//     const { title, summary, instructions, extendedIngredients } = await res.json();
-
-//     const ingredients = extendedIngredients.map((ingredient) => ingredient.original);
-
-//     return { title, information: summary, instructions, ingredients };
-//   } catch (err) {
-//     console.log("Error fetching recipe information");
-//   }
-// }
-
-  async function getMacros(maxCalories, maxCarbs, maxFat, minProtein) {
-    const url = `https://api.spoonacular.com/recipes/findByNutrients?apiKey=${apiKey}&maxCarbs=${maxCarbs}&number=4&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      displayDiv.innerHTML = "";
-
-      for (const macro of data) {
-        const macroContainer = document.createElement("div");
-        macroContainer.classList.add("macro-container");
-
-        const macroImageElem = document.createElement("img");
-        macroImageElem.classList.add("macro-image");
-        macroImageElem.src = macro.image;
-
-        const macroTitleElem = document.createElement("h2");
-        macroTitleElem.classList.add("macro-title");
-        macroTitleElem.innerText = `Macros - Calories: ${macro.calories}, Carbs: ${macro.carbs}, Fat: ${macro.fat}, Protein: ${macro.protein}`;
-
-        macroContainer.appendChild(macroImageElem);
-        macroContainer.appendChild(macroTitleElem);
-
-        displayDiv.appendChild(macroContainer);
-
-        const recipeId = macro.id;
-        await getRecipe(recipeId, macroContainer);
-      }
-    } catch (err) {
-      console.log("Error fetching macro data");
-    }
-  }
-
-  async function getRecipe(recipeId, recipeContainer) {
-  const url = `https://api.spoonacular.com/recipes/${recipeId}/summary?apiKey=${apiKey}`;
-
+async function getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein) {
   try {
-    const res = await fetch(url);
-    const { title, summary } = await res.json();
+    const url = `https://api.spoonacular.com/recipes/complexSearch?number=1&addRecipeInformation=true&instructionsRequired=true&includeIngredients=true&apiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
+    const response = await fetch(url);
+    const data = await response.json();
 
-    const recipeTitleElem = document.createElement("h3");
-    recipeTitleElem.classList.add("recipe-title");
-    recipeTitleElem.innerText = title;
+    const { results } = data;
 
-    const recipeSummaryElem = document.createElement("p");
-    recipeSummaryElem.classList.add("recipe-container");
-    recipeSummaryElem.innerHTML = summary.replace(/<a\b[^>]*>(.*?)<\/a>/gi, "$1");
+    displayDiv.innerHTML = "";
 
-    recipeContainer.appendChild(recipeTitleElem);
-    recipeContainer.appendChild(recipeSummaryElem);
-  } catch (err) {
-    console.log("Error fetching recipe summary");
+    for (const recipe of results) {
+      const { image, sourceUrl, nutrition, title, analyzedInstructions } = recipe;
+
+      const calories = nutrition.nutrients[0].amount;
+      const protein = nutrition.nutrients[1].amount;
+      const fat = nutrition.nutrients[2].amount;
+      const carbs = nutrition.nutrients[3].amount;
+
+      const html = `
+        <h2>${title}</h2>
+        <img src="${image}" alt="${title}">
+        <p><a href="${sourceUrl}">${sourceUrl}</a></p>
+        <p><strong>Calories:</strong> ${calories} kcal</p>
+        <p><strong>Protein:</strong> ${protein} g</p>
+        <p><strong>Fat:</strong> ${fat} g</p>
+        <p><strong>Carbs:</strong> ${carbs} g</p>
+        <p>${analyzedInstructions[0].steps.map((step) => step.step).join(" ")}</p>
+      `;
+
+      displayDiv.innerHTML += html;
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
+
 </script>
