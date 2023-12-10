@@ -2,6 +2,7 @@
 import Button from "../components/Button.astro";
 import Input from "../components/Input.astro";
 import Layout from "../layouts/Layout.astro";
+import {getApiKey} from '../utils/env.js';
 ---
 
 <Layout>
@@ -83,7 +84,7 @@ import Layout from "../layouts/Layout.astro";
   const errorMessage = document.querySelector(".errorMessage");
   const displayDiv = document.querySelector(".display");
 
-  const apiKey = import.meta.env.SECRET_API_KEY;
+  const apiKey = import.meta.env.API_KEY;
 
   searchButton.addEventListener("click", function () {
     const isEmpty = Array.from(inputs).some((input) => input.value === "");
