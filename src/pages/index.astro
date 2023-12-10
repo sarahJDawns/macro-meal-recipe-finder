@@ -77,53 +77,33 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script type="module">
-  // Get DOM elements
   const inputs = document.querySelectorAll("input");
   const searchButton = document.querySelector("button.searchButton");
   const clearButton = document.querySelector("button.clearButton");
   const errorMessage = document.querySelector(".errorMessage");
   const displayDiv = document.querySelector(".display");
 
-  // API key
   const apiKey = import.meta.env.API_KEY;
 
-  // Flag for API token exhaustion
-  let isApiOutOfTokens = false;
-
-  // Search button click event handler
   searchButton.addEventListener("click", function () {
-    // Check if any input is empty
     const isEmpty = Array.from(inputs).some((input) => input.value === "");
 
     if (isEmpty) {
       errorMessage.textContent = "Please enter search criteria.";
-    } else if (isApiOutOfTokens) {
-      // API out of tokens, show message
-      errorMessage.textContent =
-        "API is currently unavailable. Please try again tomorrow.";
     } else {
-      // Clear any previous error message
       errorMessage.textContent = "";
-
-      // Get search criteria values
       const [maxCalories, maxCarbs, maxFat, minProtein] = Array.from(
         inputs
       ).map((input) => input.value);
-
-      // Call function to fetch recipes with macros
       getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein);
     }
   });
 
-  // Clear button click event handler
   clearButton.addEventListener("click", () => {
-    // Clear all input values
     inputs.forEach((input) => (input.value = ""));
-    // Reset API token exhaustion flag
-    isApiOutOfTokens = false;
+    displayDiv.innerHTML = "";
   });
 
-  // Async function to fetch recipes with macros
   async function getRecipesWithMacros(
     maxCalories,
     maxCarbs,
@@ -133,50 +113,41 @@ import Layout from "../layouts/Layout.astro";
     try {
       const url = `https://api.spoonacular.com/recipes/complexSearch?number=2&addRecipeInformation=true&instructionsRequired=true&apiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
       const response = await fetch(url);
+      const data = await response.json();
 
-      if (!response.ok) {
-        if (response.status === 402) {
-          isApiOutOfTokens = true;
-          errorMessage.textContent =
-            "API is currently unavailable. Please try again tomorrow.";
-        } else {
-          throw new Error(`Error: ${response.status}`);
-        }
+      const { results } = data;
 
-        const data = await response.json();
+      displayDiv.innerHTML = "";
 
-        const { results } = data;
+      for (const recipe of results) {
+        const { image, nutrition, title, analyzedInstructions } = recipe;
 
-        displayDiv.innerHTML = "";
+        const calories = nutrition.nutrients[0].amount;
+        const protein = nutrition.nutrients[1].amount;
+        const fat = nutrition.nutrients[2].amount;
+        const carbs = nutrition.nutrients[3].amount;
 
-        for (const recipe of results) {
-          const { image, nutrition, title, analyzedInstructions } = recipe;
-
-          const calories = nutrition.nutrients[0].amount;
-          const protein = nutrition.nutrients[1].amount;
-          const fat = nutrition.nutrients[2].amount;
-          const carbs = nutrition.nutrients[3].amount;
-
-          const html = `
-        <div class="md:w-1/2 w-3/4 p-4 items-center w-full">
+        const html = `
+        <div class="md:w-1/2 w-3/4 p-4 flex flex-col justify-center items-center">
           <div class="border border-text2 p-2 ">
-          <h2 class="text-2xl font-bold mt-4 mb-2 font-body text-text ">${title}</h2>
-          <img src="${image}" alt="${title}" >
-          <div class="flex flex-row flex-wrap gap-2 mt-2">
+          <h2 class="text-2xl font-bold mt-4 mb-2 font-body text-text text-center">${title}</h2>
+          <img src="${image}" alt="${title}" class="mx-auto">
+          <div class="flex flex-row flex-wrap gap-4 mt-2 mx-auto p-2">
             <p class="font-body text-sm text-text2 flex-grow"><strong>Calories:</strong> ${calories} kcal</p>
             <p class="font-body text-sm text-text2 flex-grow"><strong>Carbs:</strong> ${carbs} g</p>
             <p class="font-body text-sm text-text2 flex-grow"><strong>Fat:</strong> ${fat} g</p>
             <p class="font-body text-sm text-text2 flex-grow"><strong>Protein:</strong> ${protein} g</p>
           </div>
-          <p class="font-body text-text2 mt-4 mb-2">${analyzedInstructions[0].steps
+          <p class="font-body text-text2 mt-4 mb-2 text-center p-2">${analyzedInstructions[0].steps
             .map((step) => step.step)
             .join(" ")}</p>
           </div>
         </div>
       `;
-          displayDiv.innerHTML += html;
-        }
+        displayDiv.innerHTML += html;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 </script>
