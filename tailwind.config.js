@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+module.exports = {
+  content: [
+    "./views/*.ejs",
+    "./views/partials/*.ejs",
+    "./views/components/*.ejs",
+    "./public/*.{html, js, css, csv}",
+  ],
   theme: {
     container: {
       center: true,
