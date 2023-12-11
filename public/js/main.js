@@ -26,7 +26,7 @@ clearButton.addEventListener("click", () => {
 
 async function getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein) {
   try {
-    const url = `https://api.spoonacular.com/recipes/complexSearch?number=2&addRecipeInformation=true&instructionsRequired=true&apiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
+    const url = `https://api.spoonacular.com/recipes/complexSearch?number=4&addRecipeInformation=true&instructionsRequired=true&apiKey=${apiKey}&maxCarbs=${maxCarbs}&minProtein=${minProtein}&maxCalories=${maxCalories}&maxFat=${maxFat}`;
     const response = await fetch(url);
     const data = await response.json();
 
@@ -43,21 +43,17 @@ async function getRecipesWithMacros(maxCalories, maxCarbs, maxFat, minProtein) {
       const carbs = nutrition.nutrients[3].amount;
 
       const html = `
-        <div class="md:w-1/2 w-3/4 p-4 flex flex-col justify-center items-center">
-          <div class="border border-text2 p-2 ">
-          <h2 class="text-2xl font-bold mt-4 mb-2 font-body text-text text-center">${title}</h2>
-          <img src="${image}" alt="${title}" class="mx-auto">
-          <div class="flex flex-row flex-wrap gap-4 mt-2 mx-auto p-2">
-            <p class="font-body text-sm text-text2 flex-grow"><strong>Calories:</strong> ${calories} kcal</p>
-            <p class="font-body text-sm text-text2 flex-grow"><strong>Carbs:</strong> ${carbs} g</p>
-            <p class="font-body text-sm text-text2 flex-grow"><strong>Fat:</strong> ${fat} g</p>
-            <p class="font-body text-sm text-text2 flex-grow"><strong>Protein:</strong> ${protein} g</p>
+          <h2>${title}</h2>
+          <img src="${image}" alt="${title}" ">
+          <div>
+            <span><strong>Calories:</strong> ${calories} kcal</span>
+            <span><strong>Carbs:</strong> ${carbs} g</span>
+            <span><strong>Fat:</strong> ${fat} g</span>
+            <span><strong>Protein:</strong> ${protein} g</span>
           </div>
-          <p class="font-body text-text2 mt-4 mb-2 text-center p-2">${analyzedInstructions[0].steps
+          <p >${analyzedInstructions[0].steps
             .map((step) => step.step)
             .join(" ")}</p>
-          </div>
-        </div>
       `;
       displayDiv.innerHTML += html;
     }
